@@ -1,0 +1,285 @@
+.note-detail-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.note-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 2rem;
+}
+
+.note-title-section {
+  flex: 1;
+}
+
+.note-title-large {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.shared-badge-large {
+  font-size: 0.6rem;
+  background: #17a2b8;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.shared-info {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #28a745;
+}
+
+.share-url-container {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.share-url-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background-color: white;
+}
+
+.copy-button {
+  padding: 0.5rem 1rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.copy-button:hover {
+  background-color: #218838;
+}
+
+.note-actions-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.toolbar-button {
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.toolbar-button.edit {
+  background: #fff3e0;
+  color: #f57c00;
+  border: 1px solid #ffcc02;
+}
+
+.toolbar-button.edit:hover {
+  background: #f57c00;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.toolbar-button.share {
+  background: #f3e5f5;
+  color: #7b1fa2;
+  border: 1px solid #ce93d8;
+}
+
+.toolbar-button.share:hover {
+  background: #7b1fa2;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.toolbar-button.delete {
+  background: #ffebee;
+  color: #d32f2f;
+  border: 1px solid #ffcdd2;
+}
+
+.toolbar-button.delete:hover {
+  background: #d32f2f;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.toolbar-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.note-meta-info {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 2rem;
+  border-left: 4px solid #3498db;
+}
+
+.meta-item {
+  color: #555;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.meta-item:last-child {
+  margin-bottom: 0;
+}
+
+.meta-item strong {
+  color: #2c3e50;
+}
+
+.note-content-detail {
+  margin-bottom: 2rem;
+}
+
+.content-text {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #2c3e50;
+}
+
+.content-text p {
+  margin-bottom: 1rem;
+}
+
+.content-text p:last-child {
+  margin-bottom: 0;
+}
+
+.no-content {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-style: italic;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.shared-info {
+  background: #e8f5e8;
+  padding: 1rem;
+  border-radius: 6px;
+  border-left: 4px solid #28a745;
+  margin-bottom: 1.5rem;
+}
+
+.shared-info h4 {
+  color: #155724;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.shared-info p {
+  color: #155724;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.note-stats {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  margin-top: 2rem;
+}
+
+.stat-item {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.stat-item strong {
+  color: #2c3e50;
+}
+
+.error-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #666;
+}
+
+.error-state h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.back-button-large {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.back-button-large:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .note-detail-container {
+    padding: 1rem;
+    margin: 0;
+    border-radius: 0;
+  }
+  
+  .note-detail-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .note-title-large {
+    font-size: 1.5rem;
+  }
+  
+  .note-actions-toolbar {
+    width: 100%;
+    justify-content: space-around;
+  }
+  
+  .toolbar-button {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .note-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
