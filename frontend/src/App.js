@@ -47,17 +47,25 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const isSharedNotePath = window.location.pathname.startsWith('/shared/');
+    const urlParams = new URLSearchParams(window.location.search);
+    const shareToken = urlParams.get('token');
     
     if (token) {
       setIsAuthenticated(true);
-    } else if (isSharedNotePath) {
+    } else if (isSharedNotePath || shareToken) {
       // For shared notes, attempt guest login if not authenticated
       handleGuestLogin();
+      if (shareToken) {
+        setCurrentView('shared');
+      }
     } else {
       setIsAuthenticated(false);
     }
 
-    // Handle shared note URL
+    // Handle shared note URL and set view accordingly
+    if (isSharedNotePath || shareToken) {
+      setCurrentView('shared');
+    }
     if (isSharedNotePath) {
       const shareToken = window.location.pathname.split('/shared/')[1];
       setSelectedNote({ shareToken });

@@ -97,12 +97,12 @@ const NoteDetail = ({ note, onEdit, onDelete, onShare, onBack, loading }) => {
             <input
               type="text"
               readOnly
-              value={`http://localhost:3001/shared/${note.share_token}`}
+              value={`${process.env.REACT_APP_URL || 'http://localhost:3000'}/shared/${note.share_token}`}
               className="share-url-input"
             />
             <button
               onClick={() => {
-                const url = `http://localhost:3001/shared/${note.share_token}`;
+                const url = `${process.env.REACT_APP_URL || 'http://localhost:3000'}/shared/${note.share_token}`;
                 navigator.clipboard.writeText(url);
                 alert('Share URL copied to clipboard!');
               }}

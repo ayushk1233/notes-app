@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Base URL for your FastAPI backend
-const BASE_URL = 'http://localhost:8001';
+// Base URL for your FastAPI backend - use environment variable or fallback
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 // Create axios instance with default config
 const api = axios.create({
@@ -62,18 +62,31 @@ const notesApi = {
         
         const response = await api.post('/auth/login', formData, {
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
           }
         });
         
         if (response.data && response.data.access_token) {
           localStorage.setItem('token', response.data.access_token);
           api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
+        } else {
+          throw new Error('Invalid response from server');
         }
         return response.data;
       } catch (error) {
         console.error('Error logging in:', error);
-        throw error;
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          throw new Error(error.response.data.detail || 'Authentication failed');
+        } else if (error.request) {
+          // The request was made but no response was received
+          throw new Error('No response from server. Please try again.');
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          throw new Error('Login failed. Please try again.');
+        }
       }
     },
 

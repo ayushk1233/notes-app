@@ -24,11 +24,14 @@ const Login = ({ onLogin, onSwitchToSignup, onGuestLogin }) => {
     setLoading(true);
 
     try {
+      if (!formData.username || !formData.password) {
+        throw new Error('Please enter both username and password');
+      }
+      
       await notesApi.auth.login(formData);
       onLogin();
     } catch (error) {
-      const errorMessage = error.response?.data?.detail || 'Invalid username or password';
-      setError(errorMessage);
+      setError(error.message || 'Invalid username or password');
       console.error('Login error:', error);
     } finally {
       setLoading(false);

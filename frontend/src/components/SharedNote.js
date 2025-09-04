@@ -40,8 +40,15 @@ const SharedNote = ({ note: initialNote, onBack }) => {
   useEffect(() => {
     const path = window.location.pathname;
     if (path.startsWith('/shared/')) {
-      const shareToken = path.split('/shared/')[1];
+      const shareToken = path.split('/shared/')[1].split('?')[0]; // Remove any query parameters
       loadSharedNote(shareToken);
+    } else {
+      // Try to get token from URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+      if (token) {
+        loadSharedNote(token);
+      }
     }
   }, []);
 

@@ -10,16 +10,19 @@ import schemas
 import auth
 import database
 
+# Configuration
+FRONTEND_URL = "http://localhost:3000"  # Frontend URL configuration
+
 app = FastAPI(title="Notes API", version="1.0.0")
 
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000"],  # Add your frontend URLs
+    allow_origins=[FRONTEND_URL, "http://127.0.0.1:3000"],  # Using the configured frontend URL
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    expose_headers=["*"]
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["Content-Type", "Authorization", "Accept"],
+    expose_headers=["Content-Type"]
 )
 
 # Initialize database on startup
@@ -46,27 +49,42 @@ async def signup(user: schemas.UserCreate, db: Session = Depends(database.get_db
 
 @app.post("/auth/login", response_model=schemas.Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
-    user = auth.authenticate_user(db, form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
+    try:
+        if not form_data.username or not form_data.password:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username and password are required"
+            )
+
+        user = auth.authenticate_user(db, form_data.username, form_data.password)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect username or password",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        
+        access_token = auth.create_access_token(
+            data={"sub": str(user.id), "is_guest": user.is_guest}
         )
-    
-    access_token = auth.create_access_token(
-        data={"sub": str(user.id), "is_guest": user.is_guest}
-    )
-    return {"access_token": access_token, "token_type": "bearer"}
+        return {"access_token": access_token, "token_type": "bearer"}
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        print(f"Login error: {str(e)}")  # For debugging
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An error occurred during login"
+        )
 
 @app.post("/auth/guest", response_model=schemas.Token)
 async def guest_login(db: Session = Depends(database.get_db)):
-    # Generate random credentials for guest
-    username = auth.generate_random_username()
-    password = auth.generate_random_username()  # Using same function for random password
-    
-    # Create guest user
     try:
+        # Generate random credentials for guest
+        username = auth.generate_random_username()
+        password = auth.generate_random_username()  # Using same function for random password
+        
+        # Create guest user
         hashed_password = auth.get_password_hash(password)
         guest_user = models.User(
             username=username,
@@ -84,32 +102,11 @@ async def guest_login(db: Session = Depends(database.get_db)):
         return {"access_token": access_token, "token_type": "bearer"}
     except Exception as e:
         db.rollback()
+        print(f"Error creating guest account: {str(e)}")  # For debugging
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to create guest account"
         )
-
-@app.post("/auth/guest", response_model=schemas.Token)
-async def guest_login(db: Session = Depends(database.get_db)):
-    # Create a guest user with random username
-    random_username = auth.generate_random_username()
-    random_password = auth.generate_random_username()  # Using same function for password
-    hashed_password = auth.get_password_hash(random_password)
-    
-    guest_user = models.User(
-        username=random_username,
-        password_hash=hashed_password,
-        is_guest=True
-    )
-    db.add(guest_user)
-    db.commit()
-    db.refresh(guest_user)
-    
-    # Create and return access token
-    access_token = auth.create_access_token(
-        data={"sub": str(guest_user.id), "is_guest": True}
-    )
-    return {"access_token": access_token, "token_type": "bearer"}
 
 # Root endpoint
 @app.get("/")
@@ -232,7 +229,7 @@ async def share_note(
     db.refresh(note)
     
     # Create response with share URL, including note title in URL
-    share_url = f"http://localhost:3001/shared/{note.share_token}"
+    share_url = f"{FRONTEND_URL}/shared/{note.share_token}"  # Using the configured frontend URL
     response_dict = {
         **note.__dict__,
         'share_url': share_url
