@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base URL for your FastAPI backend - use environment variable or fallback
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const BASE_URL = process.env.REACT_APP_API_URL || 'https://notes-app-production-e710.up.railway.app';
 
 // Create axios instance with default config
 const api = axios.create({
@@ -11,6 +11,7 @@ const api = axios.create({
     'Accept': 'application/json'
   },
 });
+
 
 // Add request interceptor to include auth token and handle initialization
 const initializeAuth = () => {
