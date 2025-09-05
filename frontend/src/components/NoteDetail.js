@@ -1,5 +1,6 @@
 import React from 'react';
 import './NoteDetail.css';
+import './NoteGlobalStyles.css';
 
 const NoteDetail = ({ note, onEdit, onDelete, onShare, onBack, loading }) => {
   const formatDate = (dateString) => {

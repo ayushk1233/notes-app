@@ -1,12 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
-import NotesList from './components/NotesList';
+import MasonryNotesGrid from './components/MasonryNotesGrid';
 import NoteForm from './components/NoteForm';
 import NoteDetail from './components/NoteDetail';
 import SharedNote from './components/SharedNote';
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
+import SkeletonNoteCard from './components/SkeletonNoteCard';
+import Fab from './components/Fab';
+import Sidebar from './components/Sidebar';
+import Navbar from './components/Navbar';
 import notesApi from './services/api';
+import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -16,6 +21,18 @@ function App() {
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authView, setAuthView] = useState('login'); // 'login' or 'signup'
+  const [activeSection, setActiveSection] = useState('all');
+
+  // Function to share a note
+  const handleShareNote = async (note) => {
+    try {
+      const response = await notesApi.shareNote(note.id);
+      alert(`Note shared successfully! Share token: ${response.share_token}`);
+    } catch (error) {
+      setError('Failed to share note');
+      console.error('Error sharing note:', error);
+    }
+  };
 
   // Function to load all notes
   const loadNotes = useCallback(async () => {
@@ -164,19 +181,9 @@ function App() {
   };
 
   // Navigation functions
-  const showCreateForm = () => {
-    setSelectedNote(null);
-    setCurrentView('create');
-  };
-
   const showEditForm = (note) => {
     setSelectedNote(note);
     setCurrentView('edit');
-  };
-
-  const showNoteDetail = (note) => {
-    setSelectedNote(note);
-    setCurrentView('detail');
   };
 
   const showNotesList = () => {
@@ -240,15 +247,41 @@ function App() {
         );
       default:
         return (
-          <NotesList
-            notes={notes}
-            onCreateNew={showCreateForm}
-            onViewNote={showNoteDetail}
-            onEditNote={showEditForm}
-            onDeleteNote={deleteNote}
-            onShareNote={shareNote}
-            loading={loading}
-          />
+          <>
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+                {[1, 2, 3, 4, 5, 6].map((n) => (
+                  <SkeletonNoteCard key={n} />
+                ))}
+              </div>
+            ) : (
+              <>
+                <MasonryNotesGrid
+                  notes={notes}
+                  onViewNote={(note) => {
+                    setSelectedNote(note);
+                    setCurrentView('detail');
+                  }}
+                  onEditNote={(note) => {
+                    setSelectedNote(note);
+                    setCurrentView('edit');
+                  }}
+                  onShareNote={handleShareNote}
+                  onDeleteNote={async (note) => {
+                    if (window.confirm('Are you sure you want to delete this note?')) {
+                      try {
+                        await notesApi.deleteNote(note.id);
+                        loadNotes();
+                      } catch (error) {
+                        console.error('Error deleting note:', error);
+                      }
+                    }
+                  }}
+                />
+                <Fab onClick={() => setCurrentView('create')} />
+              </>
+            )}
+          </>
         );
     }
   };
@@ -264,8 +297,36 @@ function App() {
     setCurrentView('list');
   };
 
-  const handleSignup = () => {
-    setIsAuthenticated(true);
+  const handleSignup = async (userData) => {
+    try {
+      await notesApi.auth.signup(userData);
+      setAuthView('login');
+    } catch (error) {
+      console.error('Signup failed:', error);
+      setError('Signup failed. Please try again.');
+    }
+  };
+
+  // Render auth view (login/signup)
+  const renderAuthView = () => {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
+          {authView === 'login' ? (
+            <Login
+              onLogin={handleLogin}
+              onSwitchToSignup={() => setAuthView('signup')}
+              onGuestLogin={handleGuestLogin}
+            />
+          ) : (
+            <Signup
+              onSignup={handleSignup}
+              onSwitchToLogin={() => setAuthView('login')}
+            />
+          )}
+        </div>
+      </div>
+    );
   };
 
   const handleSwitchToSignup = () => {
@@ -295,38 +356,65 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>📝 My Notes App</h1>
-        <div className="header-actions">
-          {currentView !== 'list' && (
-            <button 
-              className="back-button"
-              onClick={showNotesList}
-            >
-              ← Back to Notes
-            </button>
-          )}
-          <button 
-            className="logout-button"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
-        </div>
-      </header>
+    <ThemeProvider>
+      <div className="App min-h-screen bg-gradient-to-r from-[#fdfbfb] to-[#ebedee] dark:from-[#141E30] dark:to-[#243B55] transition-all duration-500">
+        {!isAuthenticated ? (
+          renderAuthView()
+        ) : (
+        <div className="flex h-screen overflow-hidden">
+          <Sidebar
+            username={localStorage.getItem('username') || 'User'}
+            activeSection={activeSection}
+            onNavigate={(section) => {
+              setActiveSection(section);
+              if (section === 'all') {
+                setCurrentView('list');
+              }
+            }}
+            onLogout={handleLogout}
+          />
+          <div className="flex-1 flex flex-col">
+            <Navbar
+              username={localStorage.getItem('username') || 'User'}
+              onSearch={(query) => {
+                // TODO: Implement search functionality
+                console.log('Search:', query);
+              }}
+              onAddNote={() => setCurrentView('create')}
+              onLogout={handleLogout}
 
-      <main className="App-main">
-        {error && (
-          <div className="error-message">
-            {error}
-            <button onClick={() => setError(null)}>×</button>
+            />
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <main className="flex-1 overflow-y-auto px-6 py-6 ml-16 md:ml-16">
+                {error && (
+                  <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg flex items-center justify-between">
+                    <span>{error}</span>
+                    <button 
+                      onClick={() => setError(null)}
+                      className="ml-4 text-red-500 hover:text-red-700"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
+
+                {currentView !== 'list' && (
+                  <button 
+                    onClick={showNotesList}
+                    className="mb-4 inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    ← Back to Notes
+                  </button>
+                )}
+
+                {renderCurrentView()}
+              </main>
+            </div>
           </div>
-        )}
-
-        {renderCurrentView()}
-      </main>
+        </div>
+      )}
     </div>
+    </ThemeProvider>
   );
 }
 

@@ -1,0 +1,68 @@
+.notes-grid-container {
+  width: 100%;
+  max-width: 2000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.my-masonry-grid {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-left: -24px; /* gutter size offset */
+  width: auto;
+}
+
+.my-masonry-grid_column {
+  padding-left: 24px; /* gutter size */
+  background-clip: padding-box;
+}
+
+.my-masonry-grid_column > div {
+  margin-bottom: 24px;
+  break-inside: avoid;
+  width: 100%;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 480px) {
+  .notes-grid-container {
+    padding: 16px;
+  }
+  .my-masonry-grid {
+    margin-left: -16px;
+  }
+  .my-masonry-grid_column {
+    padding-left: 16px;
+  }
+  .my-masonry-grid_column > div {
+    margin-bottom: 16px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .my-masonry-grid {
+    margin-left: -20px;
+  }
+  .my-masonry-grid_column {
+    padding-left: 20px;
+  }
+  .my-masonry-grid_column > div {
+    margin-bottom: 20px;
+  }
+}
+
+@media (min-width: 1537px) {
+  .notes-grid-container {
+    padding: 32px;
+  }
+  .my-masonry-grid {
+    margin-left: -32px;
+  }
+  .my-masonry-grid_column {
+    padding-left: 32px;
+  }
+  .my-masonry-grid_column > div {
+    margin-bottom: 32px;
+  }
+}

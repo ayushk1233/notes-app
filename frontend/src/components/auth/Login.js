@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import notesApi from '../../services/api';
+import ThemeToggler from '../ThemeToggler';
 import './Auth.css';
 
 const Login = ({ onLogin, onSwitchToSignup, onGuestLogin }) => {
@@ -55,11 +57,33 @@ const Login = ({ onLogin, onSwitchToSignup, onGuestLogin }) => {
 
   return (
     <div className="auth-container">
-      <div className="auth-box">
+      <div className="theme-toggle-container">
+        <ThemeToggler />
+      </div>
+      <motion.div 
+        className="auth-box"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+      >
         <h2>Login to Notes App</h2>
-        {error && <div className="error-message">{error}</div>}
+        {error && (
+          <motion.div 
+            className="error-message"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {error}
+          </motion.div>
+        )}
         <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-group">
+          <motion.div 
+            className="form-group"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.4 }}
+          >
             <label htmlFor="username">Username</label>
             <input
               type="text"
@@ -70,8 +94,13 @@ const Login = ({ onLogin, onSwitchToSignup, onGuestLogin }) => {
               required
               disabled={loading}
             />
-          </div>
-          <div className="form-group">
+          </motion.div>
+          <motion.div 
+            className="form-group"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+          >
             <label htmlFor="password">Password</label>
             <input
               type="password"
@@ -82,12 +111,26 @@ const Login = ({ onLogin, onSwitchToSignup, onGuestLogin }) => {
               required
               disabled={loading}
             />
-          </div>
-          <button type="submit" className="auth-button" disabled={loading}>
+          </motion.div>
+          <motion.button
+            type="submit"
+            className="auth-button"
+            disabled={loading}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.4 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
             {loading ? 'Logging in...' : 'Login'}
-          </button>
+          </motion.button>
         </form>
-        <div className="auth-links">
+        <motion.div 
+          className="auth-links"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.4 }}
+        >
           <button
             onClick={handleGuestLogin}
             className="guest-button"
@@ -95,7 +138,12 @@ const Login = ({ onLogin, onSwitchToSignup, onGuestLogin }) => {
           >
             Continue as Guest
           </button>
-          <p>
+          <motion.p
+            className="switch-text mt-4 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.4 }}
+          >
             Don't have an account?{' '}
             <button
               onClick={onSwitchToSignup}
@@ -104,9 +152,9 @@ const Login = ({ onLogin, onSwitchToSignup, onGuestLogin }) => {
             >
               Sign up
             </button>
-          </p>
-        </div>
-      </div>
+          </motion.p>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

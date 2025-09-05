@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './NoteForm.css';
+import './NoteGlobalStyles.css';
 
 const NoteForm = ({ note, onSubmit, onCancel, loading, isEditing = false }) => {
   const [formData, setFormData] = useState({

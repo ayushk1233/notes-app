@@ -9,7 +9,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f7fa;
   line-height: 1.6;
 }
 
@@ -17,6 +16,49 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(-45deg,
+    #e0f2fe,  /* Light blue */
+    #ccfbf1,  /* Light teal */
+    #dbeafe,  /* Sky blue */
+    #f0fdf4,  /* Light green */
+    #ccfbf1   /* Back to teal */
+  );
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+}
+
+.dark .App {
+  background: linear-gradient(to right, #141E30, #243B55);
+  animation: none;
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Masonry grid styles */
+.masonry-grid {
+  display: flex;
+  width: auto;
+  margin-left: -1.5rem;
+}
+
+.masonry-grid-column {
+  background-clip: padding-box;
+  padding-left: 1.5rem;
+}
+
+/* Optional: Add smooth transitions for height changes */
+.masonry-grid-column > div {
+  transition: height 0.3s ease;
 }
 
 .App-header {

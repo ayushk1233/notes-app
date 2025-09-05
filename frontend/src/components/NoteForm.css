@@ -1,17 +1,28 @@
 .note-form-container {
   max-width: 800px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 8px;
+  margin: 2rem auto;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 1rem;
   padding: 2rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.dark .note-form-container {
+  background: rgba(30, 31, 46, 0.95);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .form-header h2 {
-  color: #2c3e50;
+  color: #1a1a1a;
   margin: 0 0 2rem 0;
-  font-size: 1.5rem;
+  font-size: 2.5rem;
+  font-weight: 900;
   text-align: center;
+}
+
+.dark .form-header h2 {
+  color: #ffffff;
 }
 
 .note-form {
@@ -26,20 +37,35 @@
 }
 
 .form-group label {
-  color: #2c3e50;
-  font-weight: 500;
+  color: #2d2d2d;
+  font-weight: 700;
   margin-bottom: 0.5rem;
-  font-size: 1rem;
+  font-size: 1.125rem;
+}
+
+.dark .form-group label {
+  color: #ffffff;
 }
 
 .form-group input,
 .form-group textarea {
-  padding: 0.75rem;
-  border: 2px solid #e9ecef;
-  border-radius: 6px;
-  font-size: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #2d2d2d;
   font-family: inherit;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: all 0.2s ease;
+}
+
+.dark .form-group input,
+.dark .form-group textarea {
+  background: rgba(157, 165, 189, 0.1);
+  border: 1px solid rgba(157, 165, 189, 0.2);
+  color: #ffffff;
+  font-weight: 500;
 }
 
 .form-group input:focus,
@@ -47,6 +73,12 @@
   outline: none;
   border-color: #3498db;
   box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.dark .form-group input:focus,
+.dark .form-group textarea:focus {
+  border-color: rgba(157, 165, 189, 0.4);
+  box-shadow: 0 0 0 3px rgba(157, 165, 189, 0.1);
 }
 
 .form-group input.error,

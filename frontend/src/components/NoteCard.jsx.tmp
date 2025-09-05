@@ -1,0 +1,235 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+
+// Helper function to determine if a color is light or dark
+const isLightColor = (color) => {
+  // Default to true if no color is provided (will use light theme)
+  if (!color) return true;
+
+  // For predefined colors using Tailwind classes
+  if (color.startsWith('bg-')) {
+    const colorMap = {
+      'bg-red-100': true,
+      'bg-pink-100': true,
+      'bg-orange-100': true,
+      'bg-yellow-100': true,
+      'bg-green-100': true,
+      'bg-teal-100': true,
+      'bg-blue-100': true,
+      'bg-indigo-100': true,
+      'bg-purple-100': true,
+      'bg-red-200': true,
+      'bg-pink-200': true,
+      'bg-orange-200': true,
+      'bg-yellow-200': true,
+      'bg-green-200': true,
+      'bg-teal-200': true,
+      'bg-blue-200': true,
+      'bg-indigo-200': true,
+      'bg-purple-200': true,
+      // Add darker variants as false
+      'bg-red-500': false,
+      'bg-pink-500': false,
+      'bg-orange-500': false,
+      'bg-yellow-500': false,
+      'bg-green-500': false,
+      'bg-teal-500': false,
+      'bg-blue-500': false,
+      'bg-indigo-500': false,
+      'bg-purple-500': false,
+    };
+    return colorMap[color] ?? true;
+  }
+
+  // For hex colors
+  if (color.startsWith('#')) {
+    const hex = color.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 128;
+  }
+
+  return true;
+};
+
+// Predefined color options for notes
+const noteColors = [
+  { name: 'Default', value: 'bg-yellow-100' },
+  { name: 'Rose', value: 'bg-rose-100' },
+  { name: 'Orange', value: 'bg-orange-100' },
+  { name: 'Green', value: 'bg-green-100' },
+  { name: 'Teal', value: 'bg-teal-100' },
+  { name: 'Sky', value: 'bg-sky-100' },
+  { name: 'Violet', value: 'bg-violet-100' },
+  { name: 'Pink', value: 'bg-pink-100' },
+];
+
+const NoteCard = ({ title, content, tags = [], backgroundColor = 'bg-yellow-100', onView, onEdit, onDelete, onShare }) => {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  const contentPreviewLength = 200;
+  const hasMoreContent = content.length > contentPreviewLength;
+
+  return (
+    <motion.div
+      className="group relative rounded-xl"
+      whileHover={{ 
+        scale: 1.02,
+        transition: { duration: 0.2, ease: "easeOut" }
+      }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div 
+        className={`${backgroundColor} h-full rounded-xl p-6 shadow-sm transition-shadow duration-200
+          ${isLightColor(backgroundColor)
+            ? 'hover:shadow-md border border-black/5'
+            : 'hover:shadow-lg shadow-black/20 border border-white/10'}`}
+      >
+        <h3 
+          className={`font-medium text-xl mb-2 leading-tight line-clamp-2
+            ${isLightColor(backgroundColor) ? 'text-gray-800' : 'text-white'}`}
+        >
+          {title}
+        </h3>
+        
+        <motion.div layout="position" className="overflow-hidden">
+          <div 
+            className={`whitespace-pre-line text-base leading-relaxed mb-4
+              ${isLightColor(backgroundColor) ? 'text-gray-600' : 'text-white/80'}`}
+          >
+            {hasMoreContent && !isExpanded ? `${content.slice(0, contentPreviewLength)}...` : content}
+          </div>
+          {hasMoreContent && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className={`text-sm font-medium transition-colors duration-200 
+                ${isLightColor(backgroundColor)
+                  ? 'text-blue-600 hover:text-blue-700'
+                  : 'text-blue-300 hover:text-blue-200'}`}
+            >
+              {isExpanded ? 'Show less' : 'Read more'}
+            </button>
+          )}
+        </motion.div>
+
+        {/* Tags */}
+        {tags.length > 0 && (
+          <motion.div 
+            layout="position"
+            className="flex flex-wrap gap-2 mt-4"
+          >
+            {tags.map((tag, index) => (
+              <span
+                key={index}
+                className={`px-2 py-1 rounded-full text-xs font-medium
+                  ${isLightColor(backgroundColor)
+                    ? 'bg-white/50 text-gray-600'
+                    : 'bg-white/10 text-white/80'}`}
+              >
+                {tag}
+              </span>
+            ))}
+          </motion.div>
+        )}
+
+        {/* Action Buttons - Only visible on hover */}
+        <motion.div 
+          layout="position"
+          className="opacity-0 group-hover:opacity-100 transition-all duration-300 flex justify-end gap-2 mt-4 transform group-hover:translate-y-0 translate-y-2"
+        >
+          <button
+            onClick={onView}
+            className={`p-2.5 rounded-full transition-all duration-200 hover:shadow-sm
+              ${isLightColor(backgroundColor)
+                ? 'hover:bg-white/80 bg-white/50 border border-black/5'
+                : 'hover:bg-white/20 bg-white/10 border border-white/10'}`}
+            aria-label="View note"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className={`h-5 w-5 transition-colors duration-200
+                ${isLightColor(backgroundColor)
+                  ? 'text-gray-600 hover:text-blue-500'
+                  : 'text-white/70 hover:text-blue-300'}`}
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+              <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+            </svg>
+          </button>
+          <button
+            onClick={onEdit}
+            className={`p-2.5 rounded-full transition-all duration-200 hover:shadow-sm
+              ${isLightColor(backgroundColor)
+                ? 'hover:bg-white/80 bg-white/50 border border-black/5'
+                : 'hover:bg-white/20 bg-white/10 border border-white/10'}`}
+            aria-label="Edit note"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className={`h-5 w-5 transition-colors duration-200
+                ${isLightColor(backgroundColor)
+                  ? 'text-gray-600 hover:text-yellow-500'
+                  : 'text-white/70 hover:text-yellow-300'}`}
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+            </svg>
+          </button>
+          <button
+            onClick={onShare}
+            className={`p-2.5 rounded-full transition-all duration-200 hover:shadow-sm
+              ${isLightColor(backgroundColor)
+                ? 'hover:bg-white/80 bg-white/50 border border-black/5'
+                : 'hover:bg-white/20 bg-white/10 border border-white/10'}`}
+            aria-label="Share note"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className={`h-5 w-5 transition-colors duration-200
+                ${isLightColor(backgroundColor)
+                  ? 'text-gray-600 hover:text-green-500'
+                  : 'text-white/70 hover:text-green-300'}`}
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+            </svg>
+          </button>
+          <button
+            onClick={onDelete}
+            className={`p-2.5 rounded-full transition-all duration-200 hover:shadow-sm
+              ${isLightColor(backgroundColor)
+                ? 'hover:bg-red-50 bg-white/50 border border-black/5'
+                : 'hover:bg-red-500/20 bg-white/10 border border-white/10'}`}
+            aria-label="Delete note"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className={`h-5 w-5 transition-colors duration-200
+                ${isLightColor(backgroundColor)
+                  ? 'text-gray-600 hover:text-red-500'
+                  : 'text-white/70 hover:text-red-300'}`}
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
+
+export { NoteCard as default, noteColors };

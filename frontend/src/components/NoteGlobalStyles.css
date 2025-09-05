@@ -1,0 +1,127 @@
+/* Note Components Global Styles */
+
+/* Base styles for all note-related containers */
+.note-container {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.dark .note-container {
+  background: rgba(30, 31, 46, 0.95);
+}
+
+/* Typography */
+.note-title {
+  font-size: 2.5rem;
+  font-weight: 900 !important;
+  letter-spacing: -0.02em;
+}
+
+.note-content {
+  font-size: 1.125rem;
+  font-weight: 600 !important;
+  line-height: 1.8;
+}
+
+.dark .note-content p,
+.dark .note-content span,
+.dark .note-content div,
+.dark .note-content h1,
+.dark .note-content h2,
+.dark .note-content h3,
+.dark .note-content h4,
+.dark .note-content h5,
+.dark .note-content h6,
+.dark .note-content li {
+  color: #ffffff !important;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.dark .note-title,
+.dark .note-metadata,
+.dark .note-content,
+.dark .content-text,
+.dark .content-preview,
+.dark p,
+.dark span,
+.dark div,
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  color: #ffffff !important;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Form Elements */
+.note-input, 
+.note-textarea {
+  font-weight: 600 !important;
+}
+
+.dark .note-input,
+.dark .note-textarea {
+  background: rgba(157, 165, 189, 0.1);
+  border: 1px solid rgba(157, 165, 189, 0.2);
+  color: #9da5bd;
+}
+
+/* Buttons */
+.note-button {
+  font-weight: 800 !important;
+}
+
+.dark .note-button {
+  background: rgba(157, 165, 189, 0.1);
+  border: 1px solid rgba(157, 165, 189, 0.2);
+  color: #9da5bd;
+}
+
+.dark .note-button:hover {
+  background: rgba(157, 165, 189, 0.2);
+}
+
+/* Shared Note Elements */
+.shared-note-container {
+  backdrop-filter: blur(10px);
+}
+
+.dark .shared-note-container {
+  background: rgba(30, 31, 46, 0.95);
+  color: #9da5bd;
+}
+
+/* Note List Items */
+.note-list-item {
+  font-weight: 700 !important;
+}
+
+.dark .note-list-item {
+  background: rgba(157, 165, 189, 0.1);
+  border: 1px solid rgba(157, 165, 189, 0.2);
+  color: #9da5bd;
+}
+
+/* Additional Elements */
+.note-label {
+  font-weight: 700 !important;
+}
+
+.dark .note-label {
+  color: #9da5bd;
+}
+
+.note-metadata {
+  font-weight: 600 !important;
+}
+
+/* Override any existing font weights */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 900 !important;
+}
+
+button, input, select, textarea {
+  font-weight: 600 !important;
+}
